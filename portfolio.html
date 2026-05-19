@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Saidarshan Behera — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<style>
+:root{--gold:#3B82F6;--gold-light:#93C5FD;--gold-dark:#1D4ED8;--dark:#06090F;--dark2:#0D1422;--dark3:#162033;--border:rgba(59,130,246,0.25);--tr:0.4s cubic-bezier(0.4,0,0.2,1);}
+[data-theme="dark"]{--bg:var(--dark);--bg2:var(--dark2);--bg3:var(--dark3);--text:#F1F5F9;--text2:#94A3B8;--card:#0D1422;--cb:rgba(59,130,246,0.15);--nav:rgba(6,9,15,0.95);}
+[data-theme="light"]{--bg:#F8FAFC;--bg2:#EFF6FF;--bg3:#DBEAFE;--text:#0F172A;--text2:#475569;--card:#FFFFFF;--cb:rgba(59,130,246,0.15);--nav:rgba(248,250,252,0.95);}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Montserrat',sans-serif;background:var(--bg);color:var(--text);transition:background var(--tr),color var(--tr);overflow-x:hidden;}
+::-webkit-scrollbar{width:6px;}::-webkit-scrollbar-track{background:var(--bg2);}::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* NAV */
+nav{position:fixed;top:0;width:100%;z-index:1000;background:var(--nav);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 5%;display:flex;align-items:center;justify-content:space-between;height:70px;}
+.nav-logo{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--gold);text-decoration:none;}
+.nav-links{display:flex;gap:2rem;list-style:none;}
+.nav-links a{text-decoration:none;color:var(--text2);font-size:0.72rem;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;transition:color .3s;position:relative;padding-bottom:4px;}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width .3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-links a:hover::after{width:100%;}
+.nav-right{display:flex;align-items:center;gap:0.8rem;}
+.theme-btn{background:none;border:1px solid var(--border);color:var(--gold);cursor:pointer;width:40px;height:40px;border-radius:50%;font-size:1rem;display:flex;align-items:center;justify-content:center;transition:all .3s;}
+.theme-btn:hover{background:var(--gold);color:var(--dark);}
+/* Owner mode toggle button - visible only when activated */
+#owner-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:900;background:rgba(59,130,246,0.97);padding:10px 20px;align-items:center;justify-content:space-between;}
+#owner-bar.show{display:flex;}
+.owner-bar-text{font-size:0.68rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--dark);}
+.owner-bar-btns{display:flex;gap:0.8rem;}
+.ob-btn{background:var(--dark);color:var(--gold);border:none;padding:7px 16px;font-family:'Montserrat',sans-serif;font-size:0.62rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;transition:all .3s;}
+.ob-btn:hover{background:var(--dark3);}
+.ob-btn.danger{background:#c0392b;color:#fff;}
+
+/* EDIT MODE STYLES - active when body has .edit-mode */
+body.edit-mode [contenteditable]{outline:1px dashed rgba(59,130,246,0.5);cursor:text;border-radius:2px;}
+body.edit-mode [contenteditable]:hover{outline:1px dashed var(--gold);background:rgba(59,130,246,0.04);}
+body.edit-mode [contenteditable]:focus{outline:2px solid var(--gold);background:rgba(59,130,246,0.07);}
+body.edit-mode .editable-zone{position:relative;}
+body.edit-mode .editable-zone:hover .zone-controls{display:flex;}
+.zone-controls{display:none;position:absolute;top:-14px;right:0;gap:4px;z-index:50;}
+.zc-btn{background:var(--gold);color:var(--dark);border:none;font-size:0.55rem;font-weight:800;letter-spacing:0.1em;padding:3px 8px;cursor:pointer;text-transform:uppercase;border-radius:2px;white-space:nowrap;}
+.zc-btn.del{background:#c0392b;color:#fff;}
+body.edit-mode .add-row-btn{display:flex;}
+.add-row-btn{display:none;align-items:center;justify-content:center;gap:0.5rem;width:100%;border:1px dashed rgba(59,130,246,0.3);color:var(--gold);background:none;padding:12px;cursor:pointer;font-family:'Montserrat',sans-serif;font-size:0.65rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;transition:all .3s;margin-top:1rem;}
+.add-row-btn:hover{border-color:var(--gold);background:rgba(59,130,246,0.06);}
+
+/* PHOTO UPLOAD */
+.photo-wrapper{position:relative;width:100%;height:100%;}
+body.edit-mode .photo-wrapper{cursor:pointer;}
+body.edit-mode .photo-wrapper:hover .photo-overlay{display:flex;}
+.photo-overlay{display:none;position:absolute;inset:0;background:rgba(0,0,0,0.5);align-items:center;justify-content:center;flex-direction:column;gap:0.5rem;z-index:5;}
+.photo-overlay-text{font-size:0.68rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:#fff;}
+.photo-overlay-icon{font-size:1.8rem;}
+#photo-file-input{display:none;}
+
+/* CERT / PROJECT FILE UPLOAD */
+body.edit-mode .upload-img-trigger{display:inline-flex;}
+.upload-img-trigger{display:none;align-items:center;gap:4px;font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:rgba(59,130,246,0.1);border:1px solid var(--gold);padding:3px 8px;cursor:pointer;border-radius:2px;margin-top:6px;}
+.file-attachment{display:flex;align-items:center;gap:6px;margin-top:8px;padding:6px 10px;background:rgba(59,130,246,0.07);border:1px solid rgba(59,130,246,0.25);border-radius:2px;text-decoration:none;color:var(--gold);font-size:0.62rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;transition:all .3s;word-break:break-all;}
+.file-attachment:hover{background:rgba(59,130,246,0.15);border-color:var(--gold);}
+.file-attachment-icon{font-size:1rem;flex-shrink:0;}
+body.edit-mode .remove-file-btn{display:inline-flex;}
+.remove-file-btn{display:none;align-items:center;gap:4px;font-size:0.55rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#c0392b;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.3);padding:3px 8px;cursor:pointer;border-radius:2px;margin-top:4px;margin-left:4px;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:100px 5% 80px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 40%,rgba(59,130,246,0.08),transparent 70%);pointer-events:none;}
+.hero-tag{font-size:0.68rem;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);border:1px solid var(--gold);padding:6px 20px;border-radius:100px;margin-bottom:2rem;display:inline-block;min-width:10px;}
+.hero-name{font-family:'Cormorant Garamond',serif;font-size:clamp(3.5rem,10vw,8rem);font-weight:700;line-height:1.0;color:var(--text);margin-bottom:0.5rem;}
+.hero-name span{color:var(--gold);font-style:italic;}
+.hero-role{font-size:clamp(0.8rem,2vw,1rem);font-weight:700;letter-spacing:0.25em;text-transform:uppercase;color:var(--text2);margin-bottom:2rem;min-width:10px;}
+.hero-desc{max-width:620px;font-family:'Cormorant Garamond',serif;font-size:1.25rem;line-height:1.9;color:var(--text2);margin-bottom:3rem;font-weight:300;min-width:10px;}
+.hero-cta{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center;}
+.btn-gold{background:var(--gold);color:var(--dark);padding:14px 36px;border:none;border-radius:2px;font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .3s;display:inline-block;}
+.btn-gold:hover{background:var(--gold-light);transform:translateY(-2px);}
+.btn-outline{background:transparent;color:var(--gold);padding:14px 36px;border:1px solid var(--gold);border-radius:2px;font-family:'Montserrat',sans-serif;font-size:0.72rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;text-decoration:none;transition:all .3s;display:inline-block;}
+.btn-outline:hover{background:var(--gold);color:var(--dark);}
+.scroll-line{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gold);font-size:0.6rem;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;}
+.scroll-line::after{content:'';display:block;width:1px;height:50px;background:linear-gradient(to bottom,var(--gold),transparent);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* SECTIONS */
+section{padding:100px 5%;}
+.si{max-width:1100px;margin:0 auto;}
+.eyebrow{font-size:0.65rem;font-weight:800;letter-spacing:0.3em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;display:flex;align-items:center;gap:1rem;}
+.eyebrow::after{content:'';flex:1;max-width:60px;height:1px;background:var(--gold);opacity:0.5;}
+.sec-title{font-family:'Cormorant Garamond',serif;font-size:clamp(2.2rem,5vw,3.5rem);font-weight:700;line-height:1.1;color:var(--text);margin-bottom:3rem;}
+.sec-title em{color:var(--gold);font-style:italic;}
+.divider{width:100%;height:1px;background:linear-gradient(to right,transparent,var(--border),transparent);}
+
+/* ABOUT */
+.about-grid{display:grid;grid-template-columns:1fr;gap:0;align-items:start;}
+.about-img-wrap{display:none;}
+.about-placeholder{display:none;}
+.about-initials{display:none;}
+.about-placeholder-label{display:none;}
+/* Hero banner inside about */
+.about-banner{display:flex;align-items:center;gap:3rem;margin-bottom:3.5rem;padding-bottom:3rem;border-bottom:1px solid var(--border);}
+.about-monogram{font-family:'Cormorant Garamond',serif;font-size:clamp(5rem,12vw,10rem);font-weight:700;color:transparent;-webkit-text-stroke:1px var(--gold);line-height:1;opacity:0.18;flex-shrink:0;user-select:none;}
+.about-headline{flex:1;}
+.about-headline .eyebrow{margin-bottom:0.6rem;}
+.about-headline h2{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,4vw,3rem);font-weight:700;line-height:1.15;color:var(--text);margin-bottom:1rem;}
+.about-headline h2 em{color:var(--gold);font-style:italic;}
+.about-tagline{font-size:0.72rem;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:var(--gold);opacity:0.7;border:1px solid rgba(59,130,246,0.25);display:inline-block;padding:5px 14px;}
+/* Bio */
+.about-body{display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:start;}
+@media(max-width:768px){.about-body{grid-template-columns:1fr;gap:2rem;}.about-banner{flex-direction:column;gap:1rem;text-align:center;}}
+.about-bio{font-family:'Cormorant Garamond',serif;font-size:1.18rem;line-height:2;color:var(--text2);font-weight:300;position:relative;padding-left:1.5rem;}
+.about-bio::before{content:'';position:absolute;left:0;top:0.4rem;bottom:0.4rem;width:2px;background:linear-gradient(to bottom,var(--gold),transparent);}
+/* Stat cards */
+.about-facts{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.fact{background:var(--bg2);border:1px solid var(--cb);padding:1.2rem 1.4rem;position:relative;overflow:hidden;transition:border-color .3s,transform .3s;}
+.fact:hover{border-color:var(--gold);transform:translateY(-2px);}
+.fact::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:2px;background:linear-gradient(to right,var(--gold),transparent);transform:scaleX(0);transform-origin:left;transition:transform .3s;}
+.fact:hover::after{transform:scaleX(1);}
+.fact-label{font-size:0.55rem;font-weight:800;letter-spacing:0.25em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;display:block;}
+.fact-val{font-family:'Cormorant Garamond',serif;font-size:1.05rem;font-weight:600;color:var(--text);min-width:10px;display:block;line-height:1.4;}
+
+/* SKILLS */
+#skills{background:var(--bg2);}
+.skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;}
+.skill-card{background:var(--card);border:1px solid var(--cb);padding:2rem;transition:all .3s;position:relative;overflow:visible;}
+.skill-card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--gold);transform:scaleY(0);transform-origin:bottom;transition:transform .3s;}
+.skill-card:hover::before{transform:scaleY(1);}
+.skill-card:hover{transform:translateY(-4px);border-color:var(--gold);}
+.skill-icon{font-size:1.8rem;margin-bottom:1rem;display:block;}
+.skill-name{font-size:0.85rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--text);margin-bottom:0.5rem;display:block;min-width:10px;}
+.skill-list{font-family:'Cormorant Garamond',serif;font-size:1rem;color:var(--text2);line-height:1.8;display:block;min-width:10px;}
+
+/* PROJECTS */
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:2rem;}
+.project-card{background:var(--card);border:1px solid var(--cb);padding:2rem;transition:all .3s;position:relative;}
+.project-card:hover{transform:translateY(-5px);border-color:var(--gold);}
+.project-num{font-family:'Cormorant Garamond',serif;font-size:4rem;font-weight:700;color:var(--gold);opacity:0.15;position:absolute;top:1rem;right:1.5rem;line-height:1;}
+.project-cat{font-size:0.6rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.8rem;display:block;min-width:10px;}
+.project-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.8rem;line-height:1.2;display:block;min-width:10px;}
+.project-desc{font-size:0.88rem;line-height:1.7;color:var(--text2);margin-bottom:1rem;display:block;min-width:10px;}
+.project-tech{font-size:0.72rem;font-weight:700;color:var(--gold);opacity:0.8;display:block;min-width:10px;margin-bottom:0.8rem;}
+.project-img{width:100%;height:140px;object-fit:cover;border:1px solid var(--cb);margin-bottom:0.8rem;display:none;}
+.project-link-el{font-size:0.65rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);text-decoration:none;border-bottom:1px solid rgba(59,130,246,0.3);padding-bottom:2px;}
+.project-link-el:empty{display:none;}
+
+/* CERTS */
+#certifications{background:var(--bg2);}
+.cert-grid{display:flex;flex-direction:column;gap:1.5rem;}
+.cert-card{background:var(--card);border:1px solid var(--cb);display:flex;flex-direction:row;align-items:stretch;transition:all .3s;position:relative;overflow:hidden;}
+.cert-card:hover{border-color:var(--gold);transform:translateX(4px);}
+.cert-preview-panel{width:220px;min-width:220px;background:rgba(59,130,246,0.06);border-right:1px solid var(--cb);display:flex;align-items:center;justify-content:center;flex-direction:column;position:relative;overflow:hidden;flex-shrink:0;}
+.cert-preview-panel canvas{width:100%!important;height:auto!important;display:block;}
+.cert-preview-panel img.cert-preview-img{width:100%;height:100%;object-fit:cover;display:block;}
+.cert-preview-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0.5rem;padding:2rem;width:100%;min-height:160px;}
+.cert-preview-placeholder-icon{font-size:2.5rem;opacity:0.4;}
+.cert-preview-placeholder-text{font-size:0.55rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;color:var(--text2);text-align:center;}
+.cert-details{flex:1;padding:1.8rem;display:flex;flex-direction:column;justify-content:center;gap:0.3rem;}
+.cert-issuer{font-size:0.6rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.4rem;display:block;min-width:10px;}
+.cert-name{font-family:'Cormorant Garamond',serif;font-size:1.4rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;line-height:1.3;display:block;min-width:10px;}
+.cert-year{font-size:0.75rem;font-weight:600;color:var(--text2);display:block;min-width:10px;}
+.cert-link-el{font-size:0.62rem;font-weight:700;color:var(--gold);word-break:break-all;display:block;margin-top:4px;text-decoration:none;}
+.cert-link-el:empty{display:none;}
+@media(max-width:600px){.cert-card{flex-direction:column;}.cert-preview-panel{width:100%;min-width:unset;border-right:none;border-bottom:1px solid var(--cb);min-height:160px;}}
+
+/* EDUCATION */
+.edu-timeline{position:relative;padding-left:2rem;}
+.edu-timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--border);}
+.edu-item{position:relative;margin-bottom:3rem;}
+.edu-item::before{content:'';position:absolute;left:-2rem;top:6px;width:9px;height:9px;border-radius:50%;background:var(--gold);transform:translateX(-4px);}
+.edu-year{font-size:0.65rem;font-weight:800;letter-spacing:0.2em;text-transform:uppercase;color:var(--gold);margin-bottom:0.5rem;display:block;min-width:10px;}
+.edu-degree{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:0.3rem;display:block;min-width:10px;}
+.edu-school{font-size:0.85rem;font-weight:700;color:var(--text2);margin-bottom:0.4rem;display:block;min-width:10px;}
+.edu-grade{font-size:0.78rem;font-weight:700;color:var(--gold);margin-bottom:0.4rem;display:block;min-width:10px;}
+.edu-desc{font-size:0.9rem;line-height:1.7;color:var(--text2);display:block;min-width:10px;}
+
+/* CONTACT */
+#contact{background:var(--dark2);}
+[data-theme="light"] #contact{background:var(--bg3);}
+.contact-inner{max-width:700px;margin:0 auto;text-align:center;}
+#contact .sec-title{color:var(--text);}
+.contact-desc{font-family:'Cormorant Garamond',serif;font-size:1.2rem;line-height:1.9;color:rgba(59,130,246,0.7);margin-bottom:3rem;font-weight:300;min-width:10px;}
+[data-theme="light"] .contact-desc{color:var(--text2);}
+.contact-links{display:flex;flex-direction:column;gap:1rem;align-items:center;}
+.contact-link{display:flex;align-items:center;gap:1rem;text-decoration:none;padding:1rem 2rem;border:1px solid rgba(59,130,246,0.2);color:var(--gold-light);font-size:0.78rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;transition:all .3s;width:100%;max-width:460px;justify-content:center;}
+[data-theme="light"] .contact-link{color:var(--gold-dark);border-color:var(--cb);}
+.contact-link:hover{background:rgba(59,130,246,0.1);border-color:var(--gold);}
+.cl-icon{font-size:1.1rem;min-width:20px;text-align:center;}
+.cl-text{min-width:10px;}
+
+
+/* EXPORTED FILE — hide all edit UI */
+body[data-exported] #owner-bar,
+body[data-exported] #login-modal,
+body[data-exported] #pass-modal,
+body[data-exported] .add-row-btn,
+body[data-exported] .upload-img-trigger,
+body[data-exported] .remove-file-btn,
+body[data-exported] .zone-controls,
+body[data-exported] #dyn-file-input,
+body[data-exported] #dyn-folder-input{display:none!important;}
+
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+.anim{opacity:0;transform:translateY(30px);transition:opacity .7s ease,transform .7s ease;}
+.anim.in{opacity:1;transform:translateY(0);}
+.anim.out{opacity:0;transform:translateY(30px);}
+
+/* RESPONSIVE */
+@media(max-width:768px){.nav-links{display:none;}.about-grid{grid-template-columns:1fr!important;gap:2rem;}.about-facts{grid-template-columns:1fr;}.contact-link{max-width:100%;}}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,0.8);backdrop-filter:blur(10px);align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal-box{background:var(--dark2);border:1px solid var(--gold);padding:2rem;width:90%;max-width:420px;text-align:center;}
+[data-theme="light"] .modal-box{background:var(--bg2);}
+.modal-title{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:700;color:var(--gold);margin-bottom:0.5rem;}
+.modal-sub{font-size:0.68rem;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--text2);margin-bottom:1.5rem;}
+.modal-input{width:100%;background:rgba(59,130,246,0.06);border:1px solid rgba(59,130,246,0.3);color:var(--text);padding:11px;font-family:'Montserrat',sans-serif;font-size:0.88rem;outline:none;border-radius:0;margin-bottom:0.8rem;transition:border-color .3s;text-align:center;letter-spacing:0.1em;}
+.modal-input:focus{border-color:var(--gold);}
+.modal-btn{width:100%;background:var(--gold);color:var(--dark);border:none;padding:11px;font-family:'Montserrat',sans-serif;font-size:0.7rem;font-weight:800;letter-spacing:0.15em;text-transform:uppercase;cursor:pointer;transition:background .3s;margin-bottom:0.5rem;}
+.modal-btn:hover{background:var(--gold-light);}
+.modal-cancel{background:none;border:none;color:var(--text2);font-size:0.68rem;font-weight:700;letter-spacing:0.1em;cursor:pointer;text-transform:uppercase;transition:color .3s;}
+.modal-cancel:hover{color:var(--gold);}
+.modal-err{font-size:0.72rem;color:#e74c3c;font-weight:700;margin-bottom:0.5rem;display:none;}
+.modal-note{font-size:0.68rem;color:var(--text2);line-height:1.6;margin-top:1rem;}
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">SB.</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#certifications">Certifications</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <button class="theme-btn" id="themeBtn">☀</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tag" id="hero-tag" contenteditable="false">Available for Opportunities</div>
+  <h1 class="hero-name">Saidarshan <span>Behera</span></h1>
+  <p class="hero-role" id="hero-role" contenteditable="false">Aspiring Financial Analyst &amp; Article Writer</p>
+  <p class="hero-desc" id="hero-desc" contenteditable="false">Aspiring Financial Analyst with a strong foundation in Finance, Economics, and Data Analytics — transforming data into meaningful, actionable decisions.</p>
+  <div class="hero-cta">
+    <a href="#projects" class="btn-gold">View My Work</a>
+    <a href="#contact" class="btn-outline">Get in Touch</a>
+  </div>
+  <div class="scroll-line">Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="si">
+    <div class="about-grid">
+      <div class="anim">
+        <!-- Banner row -->
+        <div class="about-banner">
+          <div class="about-monogram">SB</div>
+          <div class="about-headline">
+            <div class="eyebrow">About Me</div>
+            <h2>A Mind <em>Driven</em><br>by Purpose</h2>
+            <span class="about-tagline">Finance · Economics · Data Analytics</span>
+          </div>
+        </div>
+        <!-- Bio + Facts two-column -->
+        <div class="about-body">
+          <p class="about-bio" id="about-bio" contenteditable="false">Aspiring Financial Analyst with a strong foundation in Finance, Economics, and Data Analytics, driven by one clear goal: transforming data into meaningful, actionable decisions. Beyond the numbers, I bring clarity to complexity as an Article Writer, simplifying intricate financial and economic concepts into engaging narratives. Outside academics, I serve as a Euphonist in my Institute's Brass Band — an experience that has instilled discipline, precision, and the ability to perform under pressure.</p>
+          <div class="about-facts">
+            <div class="fact"><div class="fact-label">Location</div><div class="fact-val" id="f-location" contenteditable="false">Odisha, India</div></div>
+            <div class="fact"><div class="fact-label">Status</div><div class="fact-val" id="f-status" contenteditable="false">Open to Work</div></div>
+            <div class="fact"><div class="fact-label">Focus</div><div class="fact-val" id="f-focus" contenteditable="false">Financial Analysis</div></div>
+            <div class="fact"><div class="fact-label">Interests</div><div class="fact-val" id="f-interests" contenteditable="false">Markets, Writing, Music</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="si">
+    <div class="eyebrow anim">Expertise</div>
+    <h2 class="sec-title anim">My <em>Expertise</em></h2>
+    <div class="skills-grid" id="skills-grid"></div>
+    <button class="add-row-btn" id="add-skill-btn">+ Add Skill Category</button>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="si">
+    <div class="eyebrow anim">Work</div>
+    <h2 class="sec-title anim">My <em>Projects</em></h2>
+    <div class="projects-grid" id="projects-grid"></div>
+    <button class="add-row-btn" id="add-project-btn">+ Add Project</button>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="si">
+    <div class="eyebrow anim">Credentials</div>
+    <h2 class="sec-title anim"><em>Certifications</em> &amp; Achievements</h2>
+    <div class="cert-grid" id="cert-grid"></div>
+    <button class="add-row-btn" id="add-cert-btn">+ Add Certification</button>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="si">
+    <div class="eyebrow anim">Background</div>
+    <h2 class="sec-title anim"><em>Education</em></h2>
+    <div class="edu-timeline" id="edu-timeline"></div>
+    <button class="add-row-btn" id="add-edu-btn">+ Add Education Entry</button>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="eyebrow anim" style="justify-content:center;">Contact</div>
+    <h2 class="sec-title anim" style="text-align:center;">Let's <em>Connect</em></h2>
+    <p class="contact-desc" id="contact-desc" contenteditable="false">Whether you have an opportunity, a project idea, or just want to say hello — my inbox is always open.</p>
+    <div class="contact-links" id="contact-links"></div>
+    <button class="add-row-btn" id="add-contact-btn" style="max-width:460px;margin:1rem auto 0;">+ Add Contact Link</button>
+  </div>
+</section>
+
+
+
+<!-- HIDDEN FILE INPUTS: static so label for= works in all browsers -->
+<input type="file" id="dyn-file-input" multiple style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
+<input type="file" id="dyn-folder-input" multiple webkitdirectory style="position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;opacity:0;">
+
+<!-- OWNER BAR -->
+<div id="owner-bar">
+  <span class="owner-bar-text">✦ Owner Edit Mode — Click any text to edit</span>
+  <div class="owner-bar-btns">
+    <button class="ob-btn" id="save-btn">Save Changes</button>
+    <button class="ob-btn danger" id="exit-edit-btn">Exit Edit Mode</button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal-box">
+    <div class="modal-title">Owner Access</div>
+    <div class="modal-sub">Enter your password to edit</div>
+    <div class="modal-err" id="login-err">Incorrect password. Try again.</div>
+    <input type="password" class="modal-input" id="login-input" placeholder="••••••••" autocomplete="off">
+    <button class="modal-btn" id="login-submit">Unlock</button>
+    <button class="modal-cancel" id="login-cancel">Cancel</button>
+    <p class="modal-note">Secret shortcut: <strong>Shift + E + D</strong><br>Default password: <strong>SB2025</strong></p>
+  </div>
+</div>
+
+<!-- CHANGE PASSWORD MODAL -->
+<div class="modal-overlay" id="pass-modal">
+  <div class="modal-box">
+    <div class="modal-title">Change Password</div>
+    <div class="modal-sub">Set a new owner password</div>
+    <div class="modal-err" id="pass-err"></div>
+    <input type="password" class="modal-input" id="new-pass" placeholder="New password...">
+    <input type="password" class="modal-input" id="confirm-pass" placeholder="Confirm password...">
+    <button class="modal-btn" id="pass-submit">Update Password</button>
+    <button class="modal-cancel" id="pass-cancel">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ==================== STORAGE & STATE ====================
+const PASS_KEY='sb_pass3', DATA_KEY='sb_data3', PHOTO_KEY='sb_photo3';
+const DEF_PASS='SB2025';
+function getPass(){return localStorage.getItem(PASS_KEY)||DEF_PASS;}
+function isOwner(){return sessionStorage.getItem('sb_owner')==='1';}
+
+// ==================== DEFAULT DATA ====================
+const DEF={
+  heroTag:'Available for Opportunities',
+  heroRole:'Aspiring Financial Analyst & Article Writer',
+  heroDesc:'Aspiring Financial Analyst with a strong foundation in Finance, Economics, and Data Analytics — transforming data into meaningful, actionable decisions.',
+  bio:"Aspiring Financial Analyst with a strong foundation in Finance, Economics, and Data Analytics, driven by one clear goal: transforming data into meaningful, actionable decisions. Beyond the numbers, I bring clarity to complexity as an Article Writer, simplifying intricate financial and economic concepts into engaging narratives. Outside academics, I serve as a Euphonist in my Institute's Brass Band — an experience that has instilled discipline, precision, and the ability to perform under pressure.",
+  location:'Odisha, India', status:'Open to Work', focus:'Financial Analysis', interests:'Markets, Writing, Music',
+  contactDesc:'Whether you have an opportunity, a project idea, or just want to say hello — my inbox is always open.',
+  footer:'',
+  skills:[
+    {icon:'📊',name:'Finance & Analytics',list:'Financial Modelling, Valuation, DCF Analysis, Excel'},
+    {icon:'📝',name:'Article Writing',list:'Financial Journalism, Economic Commentary, Research Reports'},
+    {icon:'🎵',name:'Music',list:'Euphonium, Brass Band, Stage Performance'},
+    {icon:'💻',name:'Technical Tools',list:'MS Excel, Power BI, Python (basics), Bloomberg'},
+    {icon:'📈',name:'Markets & Research',list:'Equity Research, Macroeconomics, Quantitative Analysis'},
+    {icon:'🤝',name:'Soft Skills',list:'Communication, Teamwork, Discipline, Problem Solving'}
+  ],
+  projects:[
+    {cat:'Research',title:'Equity Research Report',desc:'Comprehensive fundamental analysis of a listed company including DCF valuation, peer comparison, and investment thesis.',tech:'Excel, DCF, Research',link:'',img:''},
+    {cat:'Writing',title:'Financial Article Series',desc:'Published articles simplifying macroeconomic events and financial concepts for a general audience.',tech:'Writing, Economics',link:'',img:''},
+    {cat:'Data',title:'Portfolio Risk Analyser',desc:'Python-based tool to analyse portfolio risk, compute Sharpe ratio, and visualise asset allocation.',tech:'Python, Pandas, Matplotlib',link:'',img:''}
+  ],
+  certs:[
+    {issuer:'NSE Academy',name:'Financial Markets Certification',year:'2024',link:'',img:''},
+    {issuer:'Coursera / Yale',name:'Financial Markets by Robert Shiller',year:'2024',link:'',img:''},
+    {issuer:'NPTEL',name:'Introduction to Economics',year:'2023',link:'',img:''},
+    {issuer:'HackerRank',name:'Python for Finance',year:'2023',link:'',img:''}
+  ],
+  edu:[
+    {year:'2022 — Present',degree:'Bachelor of Commerce / BBA',school:'Your University Name',grade:'CGPA: 8.5 / 10',desc:'Pursuing undergraduate studies with specialisation in Finance and Economics. Active participant in finance clubs and debate societies.'},
+    {year:'2020 — 2022',degree:'Higher Secondary (Class XII)',school:'Your School Name',grade:'Percentage: 88%',desc:'Commerce stream — Accountancy, Economics, Business Studies, and Mathematics.'}
+  ],
+  contacts:[
+    {icon:'✉',label:'saidarshan@email.com',href:'mailto:saidarshan@email.com'},
+    {icon:'in',label:'linkedin.com/in/saidarshan',href:'https://linkedin.com/in/saidarshan'},
+    {icon:'⌥',label:'github.com/saidarshan',href:'https://github.com/saidarshan'}
+  ]
+};
+
+function getData(){
+  // 1. If this is an exported file, read data directly from the baked script tag
+  //    — works in any browser, any device, even with localStorage blocked
+  try{var t=document.getElementById('baked-data');if(t&&t.textContent.trim()){var p=JSON.parse(t.textContent);if(p&&typeof p==='object')return p;}}catch(e){}
+  // 2. Otherwise read from localStorage (live editing session)
+  try{var s=localStorage.getItem(DATA_KEY);if(s)return JSON.parse(s);}catch(e){}
+  // 3. Fall back to defaults
+  return JSON.parse(JSON.stringify(DEF));
+}
+function saveData(d){try{localStorage.setItem(DATA_KEY,JSON.stringify(d));}catch(e){}}
+
+// ==================== RENDER ====================
+function renderAll(d){
+  set('hero-tag',d.heroTag); set('hero-role',d.heroRole); set('hero-desc',d.heroDesc);
+  set('about-bio',d.bio); set('f-location',d.location); set('f-status',d.status);
+  set('f-focus',d.focus); set('f-interests',d.interests);
+  set('contact-desc',d.contactDesc); 
+
+  // Photo elements removed — no-op
+
+  renderSkills(d.skills);
+  renderProjects(d.projects);
+  renderCerts(d.certs);
+  renderEdu(d.edu);
+  renderContacts(d.contacts);
+  reAnim();
+}
+
+function set(id,val){const el=document.getElementById(id);if(el)el.textContent=val||'';}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+function renderSkills(skills){
+  const g=document.getElementById('skills-grid');
+  g.innerHTML=skills.map((s,i)=>`
+    <div class="skill-card editable-zone" data-type="skill" data-idx="${i}">
+      <div class="zone-controls">
+        <button class="zc-btn" onclick="moveItem('skill',${i},-1)">↑</button>
+        <button class="zc-btn" onclick="moveItem('skill',${i},1)">↓</button>
+        <button class="zc-btn del" onclick="delItem('skill',${i})">Delete</button>
+      </div>
+      <span class="skill-icon" contenteditable="false" data-field="icon" data-type="skill" data-idx="${i}">${esc(s.icon)}</span>
+      <span class="skill-name" contenteditable="false" data-field="name" data-type="skill" data-idx="${i}">${esc(s.name)}</span>
+      <span class="skill-list" contenteditable="false" data-field="list" data-type="skill" data-idx="${i}">${esc(s.list)}</span>
+    </div>`).join('');
+}
+
+function fileIcon(name){
+  if(!name)return'📎';
+  const ext=(name.split('.').pop()||'').toLowerCase();
+  if(ext==='pdf')return'📄';
+  if(ext==='py')return'🐍';
+  if(ext==='sql')return'🗄️';
+  if(['png','jpg','jpeg','gif','webp'].includes(ext))return'🖼️';
+  return'📎';
+}
+function fmtSize(bytes){if(bytes<1024)return bytes+'B';if(bytes<1048576)return Math.round(bytes/1024)+'KB';return(bytes/1048576).toFixed(1)+'MB';}
+function renderProjFiles(p,i){
+  let o='';
+  // Migrate: files with '/' in name were folder uploads stored in p.files by old code
+  // Group them into a virtual folder so they display correctly
+  var legacyFolderFiles=(p.files||[]).filter(function(f){return f.name&&f.name.indexOf('/')!==-1;});
+  var trueFiles=(p.files||[]).filter(function(f){return !f.name||f.name.indexOf('/')===-1;});
+  // Also handle old single-file storage via p.img/p.fileName
+  var all=trueFiles.length?trueFiles:(p.img&&p.fileName&&p.fileName.indexOf('/')===-1?[{name:p.fileName,data:p.img}]:[]);
+  all.forEach(function(f){
+    o+='<a class="file-attachment" href="'+f.data+'" download="'+esc(f.name)+'" target="_blank">'
+      +'<span class="file-attachment-icon">'+fileIcon(f.name)+'</span><span>'+esc(f.name)+'</span>'
+      +'<span style="margin-left:auto;opacity:0.6">&#8595;</span></a>';
+  });
+  if(all.length) o+='<button class="remove-file-btn" onclick="removeFile(&quot;project&quot;,'+i+',&quot;files&quot;)">&#10005; Remove Files</button>';
+  // Render legacy folder (migrated from p.files)
+  if(legacyFolderFiles.length){
+    var legFolderName=legacyFolderFiles[0].name.split('/')[0];
+    var legTotal=legacyFolderFiles.reduce(function(s,f){return s+(f.size||0);},0);
+    o+='<div class="file-attachment" style="flex-direction:column;align-items:flex-start;gap:4px;">'
+      +'<div style="display:flex;align-items:center;gap:6px;width:100%;">'
+      +'<span class="file-attachment-icon">📁</span>'
+      +'<span style="font-weight:800;">'+esc(legFolderName)+'</span>'
+      +'<span style="margin-left:auto;opacity:0.6;font-size:0.58rem;">'+legacyFolderFiles.length+' files · '+fmtSize(legTotal)+'</span>'
+      +'</div>'
+      +'<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">'
+      +'<button onclick="removeFile(&quot;project&quot;,'+i+',&quot;files&quot;)" style="display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:#c0392b;background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.3);padding:3px 8px;cursor:pointer;border-radius:2px;">&#10005; Remove Folder</button>'
+      +'</div>'
+      +'</div>';
+  }
+  // Folders stored correctly in p.folders
+  (p.folders||[]).forEach(function(folder,fi){
+    o+='<div class="file-attachment" style="flex-direction:column;align-items:flex-start;gap:4px;">'
+      +'<div style="display:flex;align-items:center;gap:6px;width:100%;">'
+      +'<span class="file-attachment-icon">📁</span>'
+      +'<span style="font-weight:800;">'+esc(folder.folderName)+'</span>'
+      +'<span style="margin-left:auto;opacity:0.6;font-size:0.58rem;">'+folder.fileCount+' files · '+fmtSize(folder.totalSize)+'</span>'
+      +'</div>'
+      +'<div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">'
+      +'<button onclick="downloadFolder('+i+','+fi+')" style="display:inline-flex;align-items:center;gap:4px;font-size:0.58rem;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--gold);background:rgba(59,130,246,0.1);border:1px solid var(--gold);padding:3px 8px;cursor:pointer;border-radius:2px;">&#8681; Download Files</button>'
+      +'<button class="remove-file-btn" onclick="removeFile(&quot;project&quot;,'+i+',&quot;folder&quot;,'+fi+')">&#10005; Remove Folder</button>'
+      +'</div>'
+      +'</div>';
+  });
+  // Upload triggers — label+for opens picker as a trusted user gesture;
+  // onpointerdown sets the target BEFORE the browser opens the file picker
+  o+='<label class="upload-img-trigger" for="dyn-file-input" onpointerdown="setFileTarget(\'project\','+i+')">&#128206; File</label>'
+   +'<label class="upload-img-trigger" for="dyn-folder-input" onpointerdown="setFileTarget(\'project\','+i+')" style="margin-left:4px;">&#128193; Folder</label>';
+  return o;
+}
+// projFilesHtml merged into renderProjFiles
+function renderProjects(projects){
+  const g=document.getElementById('projects-grid');
+  g.innerHTML=projects.map((p,i)=>`
+    <div class="project-card editable-zone" data-type="project" data-idx="${i}">
+      <div class="zone-controls">
+        <button class="zc-btn" onclick="moveItem('project',${i},-1)">↑</button>
+        <button class="zc-btn" onclick="moveItem('project',${i},1)">↓</button>
+        <button class="zc-btn del" onclick="delItem('project',${i})">Delete</button>
+      </div>
+      <span class="project-num">${String(i+1).padStart(2,'0')}</span>
+      <span class="project-cat" contenteditable="false" data-field="cat" data-type="project" data-idx="${i}">${esc(p.cat)}</span>
+      <span class="project-title" contenteditable="false" data-field="title" data-type="project" data-idx="${i}">${esc(p.title)}</span>
+      ${p.img&&['png','jpg','jpeg','gif','webp'].some(x=>p.fileName&&p.fileName.toLowerCase().endsWith(x))?`<img class="project-img" src="${p.img}" style="display:block">`:``}
+      ${renderProjFiles(p,i)}
+      <span class="project-desc" contenteditable="false" data-field="desc" data-type="project" data-idx="${i}">${esc(p.desc)}</span>
+      <span class="project-tech" contenteditable="false" data-field="tech" data-type="project" data-idx="${i}">${esc(p.tech)}</span>
+      <span class="project-link-el" contenteditable="false" data-field="link" data-type="project" data-idx="${i}" style="${p.link?'':'display:none'}">${p.link?`<a href="${esc(p.link)}" target="_blank" style="color:var(--gold)">View Project ↗</a>`:''}</span>
+    </div>`).join('');
+}
+
+function renderCerts(certs){
+  const g=document.getElementById('cert-grid');
+  const isImg=fn=>fn&&['png','jpg','jpeg','gif','webp'].some(x=>fn.toLowerCase().endsWith(x));
+  const isPdf=fn=>fn&&fn.toLowerCase().endsWith('.pdf');
+  g.innerHTML=certs.map((c,i)=>{
+    let previewHtml='';
+    if(c.img&&c.fileName){
+      if(isImg(c.fileName)){
+        previewHtml=`<img class="cert-preview-img" src="${c.img}" alt="Certificate preview">`;
+      } else if(isPdf(c.fileName)){
+        previewHtml=`<canvas id="cert-canvas-${i}" style="width:100%;display:block;"></canvas>`;
+      } else {
+        previewHtml=`<div class="cert-preview-placeholder"><span class="cert-preview-placeholder-icon">📄</span><span class="cert-preview-placeholder-text">${esc(c.fileName)}</span></div>`;
+      }
+    } else {
+      previewHtml=`<div class="cert-preview-placeholder"><span class="cert-preview-placeholder-icon">🏅</span><span class="cert-preview-placeholder-text">Upload certificate</span></div>`;
+    }
+    return `
+    <div class="cert-card editable-zone" data-type="cert" data-idx="${i}">
+      <div class="zone-controls">
+        <button class="zc-btn" onclick="moveItem('cert',${i},-1)">↑</button>
+        <button class="zc-btn" onclick="moveItem('cert',${i},1)">↓</button>
+        <button class="zc-btn del" onclick="delItem('cert',${i})">Delete</button>
+      </div>
+      <div class="cert-preview-panel" id="cert-panel-${i}">${previewHtml}</div>
+      <div class="cert-details">
+        ${c.img&&c.fileName?`<a class="file-attachment" href="${c.img}" download="${esc(c.fileName)}" target="_blank"><span class="file-attachment-icon">${fileIcon(c.fileName)}</span><span>${esc(c.fileName)}</span><span style="margin-left:auto;opacity:0.6">↓</span></a><button class="remove-file-btn" onclick="removeFile('cert',${i})">✕ Remove</button>`:`<span class="upload-img-trigger" onclick="triggerFileUpload('cert',${i})">📎 Attach File</span>`}
+        <span class="cert-issuer" contenteditable="false" data-field="issuer" data-type="cert" data-idx="${i}">${esc(c.issuer)}</span>
+        <span class="cert-name" contenteditable="false" data-field="name" data-type="cert" data-idx="${i}">${esc(c.name)}</span>
+        <span class="cert-year" contenteditable="false" data-field="year" data-type="cert" data-idx="${i}">${esc(c.year)}</span>
+        <span class="cert-link-el" contenteditable="false" data-field="link" data-type="cert" data-idx="${i}">${c.link?`<a href="${esc(c.link)}" target="_blank" style="color:var(--gold);font-size:0.65rem;">View Certificate ↗</a>`:''}</span>
+      </div>
+    </div>`;
+  }).join('');
+  // Render PDF previews after DOM is updated
+  certs.forEach((c,i)=>{
+    if(c.img&&c.fileName&&c.fileName.toLowerCase().endsWith('.pdf')){
+      renderPdfPreview(c.img, `cert-canvas-${i}`, `cert-panel-${i}`);
+    }
+  });
+}
+
+function renderPdfPreview(dataUrl, canvasId, panelId){
+  if(!window.pdfjsLib){return;}
+  pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  pdfjsLib.getDocument(dataUrl).promise.then(pdf=>{
+    pdf.getPage(1).then(page=>{
+      const panel=document.getElementById(panelId);
+      const canvas=document.getElementById(canvasId);
+      if(!canvas||!panel)return;
+      const panelW=panel.offsetWidth||220;
+      const viewport=page.getViewport({scale:1});
+      const scale=panelW/viewport.width;
+      const scaled=page.getViewport({scale});
+      canvas.width=scaled.width;
+      canvas.height=scaled.height;
+      page.render({canvasContext:canvas.getContext('2d'),viewport:scaled});
+    });
+  }).catch(()=>{
+    const panel=document.getElementById(panelId);
+    if(panel)panel.innerHTML=`<div class="cert-preview-placeholder"><span class="cert-preview-placeholder-icon">📄</span><span class="cert-preview-placeholder-text">PDF preview unavailable</span></div>`;
+  });
+}
+
+function renderEdu(edu){
+  const t=document.getElementById('edu-timeline');
+  t.innerHTML=edu.map((e,i)=>`
+    <div class="edu-item editable-zone" data-type="edu" data-idx="${i}">
+      <div class="zone-controls">
+        <button class="zc-btn" onclick="moveItem('edu',${i},-1)">↑</button>
+        <button class="zc-btn" onclick="moveItem('edu',${i},1)">↓</button>
+        <button class="zc-btn del" onclick="delItem('edu',${i})">Delete</button>
+      </div>
+      <span class="edu-year" contenteditable="false" data-field="year" data-type="edu" data-idx="${i}">${esc(e.year)}</span>
+      <span class="edu-degree" contenteditable="false" data-field="degree" data-type="edu" data-idx="${i}">${esc(e.degree)}</span>
+      <span class="edu-school" contenteditable="false" data-field="school" data-type="edu" data-idx="${i}">${esc(e.school)}</span>
+      <span class="edu-grade" contenteditable="false" data-field="grade" data-type="edu" data-idx="${i}">${esc(e.grade)}</span>
+      <span class="edu-desc" contenteditable="false" data-field="desc" data-type="edu" data-idx="${i}">${esc(e.desc)}</span>
+    </div>`).join('');
+}
+
+function renderContacts(contacts){
+  const cl=document.getElementById('contact-links');
+  cl.innerHTML=contacts.map((c,i)=>`
+    <div class="contact-link editable-zone" style="position:relative;" data-type="contact" data-idx="${i}">
+      <div class="zone-controls">
+        <button class="zc-btn del" onclick="delItem('contact',${i})">Delete</button>
+      </div>
+      <span class="cl-icon" contenteditable="false" data-field="icon" data-type="contact" data-idx="${i}">${esc(c.icon)}</span>
+      <span class="cl-text" contenteditable="false" data-field="label" data-type="contact" data-idx="${i}">${esc(c.label)}</span>
+    </div>`).join('');
+}
+
+// ==================== ANIMATIONS ====================
+let anim_obs;
+function reAnim(){
+  if(anim_obs)anim_obs.disconnect();
+  anim_obs=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if(e.isIntersecting){
+        e.target.classList.add('in');
+        e.target.classList.remove('out');
+      } else if(e.target.classList.contains('in')){
+        e.target.classList.remove('in');
+        e.target.classList.add('out');
+      }
+    });
+  },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+  document.querySelectorAll('.anim').forEach(function(el){
+    el.classList.remove('in','out');
+    anim_obs.observe(el);
+  });
+}
+
+// ==================== THEME ====================
+let theme=localStorage.getItem('sb_theme')||'dark';
+document.body.setAttribute('data-theme',theme);
+document.getElementById('themeBtn').textContent=theme==='dark'?'☀':'☾';
+document.getElementById('themeBtn').addEventListener('click',()=>{
+  theme=theme==='dark'?'light':'dark';
+  document.body.setAttribute('data-theme',theme);
+  document.getElementById('themeBtn').textContent=theme==='dark'?'☀':'☾';
+  localStorage.setItem('sb_theme',theme);
+});
+
+// ==================== OWNER MODE ACTIVATION ====================
+const keys=new Set();
+document.addEventListener('keydown',e=>{
+  if(document.body.getAttribute('data-exported'))return;
+  keys.add(e.key.toUpperCase());
+  if(keys.has('SHIFT')&&keys.has('E')&&keys.has('D')){keys.clear();showLogin();}
+});
+document.addEventListener('keyup',e=>keys.delete(e.key.toUpperCase()));
+
+function showLogin(){
+  document.getElementById('login-modal').classList.add('show');
+  document.getElementById('login-input').value='';
+  document.getElementById('login-err').style.display='none';
+  setTimeout(()=>document.getElementById('login-input').focus(),100);
+}
+document.getElementById('login-cancel').addEventListener('click',()=>document.getElementById('login-modal').classList.remove('show'));
+document.getElementById('login-submit').addEventListener('click',()=>{
+  if(document.getElementById('login-input').value===getPass()){
+    document.getElementById('login-modal').classList.remove('show');
+    enterOwnerMode();
+  } else {
+    document.getElementById('login-err').style.display='block';
+    document.getElementById('login-input').value='';
+    document.getElementById('login-input').focus();
+  }
+});
+document.getElementById('login-input').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('login-submit').click();});
+
+let _photoListenersAdded=false;
+function enterOwnerMode(){
+  sessionStorage.setItem('sb_owner','1');
+  document.body.classList.add('edit-mode');
+  document.getElementById('owner-bar').classList.add('show');
+  document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable','true'));
+  if(!_photoListenersAdded){
+    _photoListenersAdded=true;
+    var pw=document.getElementById('photo-wrapper');var pp=document.getElementById('photo-file-input');
+    if(pw&&pp){pw.addEventListener('click',()=>pp.click());}
+    var aph=document.getElementById('about-placeholder');if(aph&&pp){aph.addEventListener('click',()=>pp.click());}
+  }
+}
+
+function exitOwnerMode(){
+  sessionStorage.removeItem('sb_owner');
+  document.body.classList.remove('edit-mode');
+  document.getElementById('owner-bar').classList.remove('show');
+  document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable','false'));
+}
+
+document.getElementById('exit-edit-btn').addEventListener('click',()=>{
+  if(confirm('Exit edit mode? Unsaved changes will be lost.'))exitOwnerMode();
+});
+
+// ==================== READ DOM HELPERS ====================
+function readField(type,field){
+  return Array.from(document.querySelectorAll('[data-field="'+field+'"][data-type="'+type+'"]')).map(el=>el.textContent.trim());
+}
+function flushDom(){
+  // Read all current DOM text into a fresh copy of stored data
+  const d=getData();
+  const map={'hero-tag':'heroTag','hero-role':'heroRole','hero-desc':'heroDesc','about-bio':'bio','f-location':'location','f-status':'status','f-focus':'focus','f-interests':'interests','contact-desc':'contactDesc'};
+  for(const[id,key]of Object.entries(map)){const el=document.getElementById(id);if(el)d[key]=el.textContent.trim();}
+  const si=readField('skill','icon'),sn=readField('skill','name'),sl=readField('skill','list');
+  d.skills=d.skills.map((s,i)=>({...s,icon:si[i]!==undefined?si[i]:s.icon,name:sn[i]!==undefined?sn[i]:s.name,list:sl[i]!==undefined?sl[i]:s.list}));
+  const pc=readField('project','cat'),pt=readField('project','title'),pd=readField('project','desc'),pk=readField('project','tech');
+  d.projects=d.projects.map((p,i)=>({...p,cat:pc[i]!==undefined?pc[i]:p.cat,title:pt[i]!==undefined?pt[i]:p.title,desc:pd[i]!==undefined?pd[i]:p.desc,tech:pk[i]!==undefined?pk[i]:p.tech}));
+  const ci=readField('cert','issuer'),cn=readField('cert','name'),cy=readField('cert','year');
+  d.certs=d.certs.map((c,i)=>({...c,issuer:ci[i]!==undefined?ci[i]:c.issuer,name:cn[i]!==undefined?cn[i]:c.name,year:cy[i]!==undefined?cy[i]:c.year}));
+  const ey=readField('edu','year'),ed=readField('edu','degree'),es=readField('edu','school'),eg=readField('edu','grade'),ex=readField('edu','desc');
+  d.edu=d.edu.map((e,i)=>({year:ey[i]!==undefined?ey[i]:e.year,degree:ed[i]!==undefined?ed[i]:e.degree,school:es[i]!==undefined?es[i]:e.school,grade:eg[i]!==undefined?eg[i]:e.grade,desc:ex[i]!==undefined?ex[i]:e.desc}));
+  const icon=readField('contact','icon'),lbl=readField('contact','label');
+  d.contacts=d.contacts.map((c,i)=>({...c,icon:icon[i]!==undefined?icon[i]:c.icon,label:lbl[i]!==undefined?lbl[i]:c.label}));
+  return d;
+}
+
+// ==================== SAVE ====================
+document.getElementById('save-btn').addEventListener('click',()=>{
+  const d=flushDom();
+  saveData(d);
+  exportHTML(d);
+  toast('✦ Saved & downloaded!');
+});
+
+function exportHTML(d){
+  var SC='scri'+'pt';
+
+  // Get the ORIGINAL source HTML — not the live outerHTML which has dynamic rendered content
+  // We re-fetch the page source via XMLHttpRequest so we get the clean original file
+  // Then bake the data into it and strip edit-only elements
+  var xhr=new XMLHttpRequest();
+  xhr.open('GET',location.href,false); // synchronous — only for save operation
+  try{xhr.send();}catch(e){
+    // fallback to outerHTML if fetch fails (e.g. file:// protocol blocked)
+    _exportFromOuterHTML(d,SC);return;
+  }
+  if(xhr.status!==200&&xhr.status!==0){_exportFromOuterHTML(d,SC);return;}
+  var src=xhr.responseText;
+
+  src=_stripAndBake(src,d,SC);
+  _downloadHTML(src);
+}
+
+function _exportFromOuterHTML(d,SC){
+  // Fallback: use outerHTML but be careful with the DOM state
+  var wasOwner=isOwner();
+  if(wasOwner){
+    document.body.classList.remove('edit-mode');
+    document.getElementById('owner-bar').classList.remove('show');
+    document.querySelectorAll('[contenteditable]').forEach(function(el){el.setAttribute('contenteditable','false');});
+  }
+  var src=document.documentElement.outerHTML;
+  if(wasOwner){
+    document.body.classList.add('edit-mode');
+    document.getElementById('owner-bar').classList.add('show');
+    document.querySelectorAll('[contenteditable]').forEach(function(el){el.setAttribute('contenteditable','true');});
+  }
+  src=_stripAndBake(src,d,SC);
+  _downloadHTML(src);
+}
+
+function _stripAndBake(src,d,SC){
+  // Strip ALL previously baked tags — regex uses [^] to match any char including newlines
+  var stripTag=function(id){
+    return src.replace(new RegExp('<'+SC+'[^>]*id="'+id+'"[^>]*>[^]*?</'+SC+'>','g'),'');
+  };
+  src=stripTag('baked-data');
+  src=stripTag('baked-photo');
+  src=stripTag('baked-exported');
+
+  // Bake current data
+  var json=JSON.stringify(d);
+  var photo=localStorage.getItem('sb_photo3')||'';
+  var tag='\n<'+SC+' id="baked-data" type="application/json">'+json+'</'+SC+'>';
+  if(photo)tag+='\n<'+SC+' id="baked-photo" type="application/json">'+JSON.stringify(photo)+'</'+SC+'>';
+  // Mark as exported — disables Shift+E+D and edit mode on load
+  tag+='\n<'+SC+' id="baked-exported">1</'+SC+'>';
+
+  var bi=src.lastIndexOf('</body>');
+  if(bi===-1)src+=tag; else src=src.slice(0,bi)+tag+'\n</body>'+src.slice(bi+7);
+  return src;
+}
+
+function _downloadHTML(src){
+  var blob=new Blob([src],{type:'text/html'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download='portfolio.html';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(a.href);},3000);
+}
+
+// ==================== ADD ITEMS ====================
+document.getElementById('add-skill-btn').addEventListener('click',()=>{
+  const d=flushDom();d.skills.push({icon:'⭐',name:'New Skill',list:'Skill 1, Skill 2, Skill 3'});
+  saveData(d);renderSkills(d.skills);applyEditMode();
+});
+document.getElementById('add-project-btn').addEventListener('click',()=>{
+  const d=flushDom();d.projects.push({cat:'Category',title:'New Project',desc:'Project description here.',tech:'Tool 1, Tool 2',link:'',img:'',fileName:''});
+  saveData(d);renderProjects(d.projects);applyEditMode();
+});
+document.getElementById('add-cert-btn').addEventListener('click',()=>{
+  const d=flushDom();d.certs.push({issuer:'Issuing Organisation',name:'Certificate Name',year:'2025',link:'',img:'',fileName:''});
+  saveData(d);renderCerts(d.certs);applyEditMode();
+});
+document.getElementById('add-edu-btn').addEventListener('click',()=>{
+  const d=flushDom();d.edu.push({year:'20XX — 20XX',degree:'Degree / Qualification',school:'Institution Name',grade:'CGPA / Percentage',desc:'Brief description of your studies.'});
+  saveData(d);renderEdu(d.edu);applyEditMode();
+});
+document.getElementById('add-contact-btn').addEventListener('click',()=>{
+  const d=flushDom();
+  const href=prompt('Enter full URL or email:');if(!href)return;
+  const label=prompt('Display label:')||href;
+  const icon=prompt('Icon (emoji):')||'🔗';
+  d.contacts.push({icon,label,href});
+  saveData(d);renderContacts(d.contacts);applyEditMode();
+});
+
+// ==================== DELETE & MOVE ====================
+window.delItem=function(type,idx){
+  if(!confirm('Delete this item?'))return;
+  const d=flushDom();
+  const map={skill:'skills',project:'projects',cert:'certs',edu:'edu',contact:'contacts'};
+  d[map[type]].splice(idx,1);saveData(d);
+  if(type==='skill')renderSkills(d.skills);
+  else if(type==='project')renderProjects(d.projects);
+  else if(type==='cert')renderCerts(d.certs);
+  else if(type==='edu')renderEdu(d.edu);
+  else if(type==='contact')renderContacts(d.contacts);
+  applyEditMode();
+};
+window.moveItem=function(type,idx,dir){
+  const d=flushDom();
+  const map={skill:'skills',project:'projects',cert:'certs',edu:'edu'};
+  const arr=d[map[type]];const ni=idx+dir;
+  if(ni<0||ni>=arr.length)return;
+  [arr[idx],arr[ni]]=[arr[ni],arr[idx]];saveData(d);
+  if(type==='skill')renderSkills(d.skills);
+  else if(type==='project')renderProjects(d.projects);
+  else if(type==='cert')renderCerts(d.certs);
+  else if(type==='edu')renderEdu(d.edu);
+  applyEditMode();
+};
+
+// ==================== IMAGE UPLOADS ====================
+// Profile photo
+var _pfi=document.getElementById('photo-file-input');if(_pfi)_pfi.addEventListener('change',function(){
+  const file=this.files[0];if(!file)return;
+  if(file.size>5*1024*1024){alert('Max 5MB');return;}
+  const reader=new FileReader();
+  reader.onload=e=>{
+    toast('Photo updated (no longer displayed — photo box removed).');
+  };
+  reader.readAsDataURL(file);
+});
+
+let _fileUploadTarget=null;
+
+// Read all files as base64 then fire cb(results) once every file is done
+function readFilesAsBase64(files,cb){
+  var arr=Array.from(files),total=arr.length,done=0,results=new Array(total);
+  arr.forEach(function(file,i){
+    var r=new FileReader();
+    r.onload=function(e){
+      results[i]={name:file.name,relativePath:file.webkitRelativePath||file.name,data:e.target.result,size:file.size};
+      if(++done===total)cb(results);
+    };
+    r.onerror=function(){
+      results[i]={name:file.name,relativePath:file.webkitRelativePath||file.name,data:'',size:file.size};
+      if(++done===total)cb(results);
+    };
+    r.readAsDataURL(file);
+  });
+}
+
+// FILE UPLOAD — inputs are static HTML elements; just attach listeners here
+(function(){
+  var fi=document.getElementById('dyn-file-input');
+  var fli=document.getElementById('dyn-folder-input');
+  if(!fi||!fli)return;
+
+  fi.addEventListener('change',function(){
+    var files=Array.from(this.files);
+    if(!files.length||!_fileUploadTarget)return;
+    var target=_fileUploadTarget;_fileUploadTarget=null;
+    var self=this;
+    toast('Reading '+files.length+' file'+(files.length>1?'s':'')+'...');
+    readFilesAsBase64(files,function(results){
+      self.value='';
+      var d=flushDom(),type=target.type,idx=target.idx;
+      if(type==='project'){
+        if(!d.projects[idx].files)d.projects[idx].files=[];
+        results.forEach(function(f){
+          if(!f.data)return;
+          d.projects[idx].files.push({name:f.name,data:f.data,size:f.size});
+          if(/\.(png|jpg|jpeg|gif|webp)$/i.test(f.name)){d.projects[idx].img=f.data;d.projects[idx].fileName=f.name;}
+        });
+        saveData(d);renderProjects(d.projects);
+      } else if(type==='cert'){
+        var f=results[0];
+        if(f&&f.data){d.certs[idx].img=f.data;d.certs[idx].fileName=f.name;saveData(d);renderCerts(d.certs);}
+      }
+      applyEditMode();
+      toast('Attached '+results.length+' file'+(results.length>1?'s':'')+'!');
+    });
+  });
+
+  fli.addEventListener('change',function(){
+    var files=Array.from(this.files);
+    if(!files.length||!_fileUploadTarget)return;
+    var target=_fileUploadTarget;_fileUploadTarget=null;
+    var self=this;
+    var totalSize=files.reduce(function(s,f){return s+f.size;},0);
+    if(totalSize>200*1024*1024){alert('Folder too large (max 200MB).');return;}
+    var firstPath=files[0].webkitRelativePath||files[0].name;
+    var folderName=firstPath.indexOf('/')!==-1?firstPath.split('/')[0]:firstPath;
+    toast('Reading "'+folderName+'" ('+files.length+' files)...');
+    readFilesAsBase64(files,function(results){
+      self.value='';
+      var d=flushDom(),type=target.type,idx=target.idx;
+      if(type==='project'){
+        if(!d.projects[idx].folders)d.projects[idx].folders=[];
+        d.projects[idx].folders.push({
+          folderName:folderName,fileCount:files.length,totalSize:totalSize,
+          files:results.filter(function(f){return!!f.data;})
+        });
+        saveData(d);renderProjects(d.projects);applyEditMode();
+        toast('\u{1F4C1} "'+folderName+'" attached ('+files.length+' files)');
+      }
+    });
+  });
+})();
+
+// Called by project card labels on pointerdown — sets target BEFORE picker opens
+window.setFileTarget=function(type,idx){_fileUploadTarget={type:type,idx:idx};};
+
+// Used by cert section (programmatic click is fine there — same button handler)
+window.triggerFileUpload=function(type,idx){
+  _fileUploadTarget={type:type,idx:idx};
+  document.getElementById('dyn-file-input').click();
+};
+window.triggerFolderUpload=function(type,idx){
+  _fileUploadTarget={type:type,idx:idx};
+  document.getElementById('dyn-folder-input').click();
+};
+
+window.downloadFolder=function(projIdx,folderIdx){
+  var d=getData();
+  var folder=d.projects[projIdx]&&d.projects[projIdx].folders&&d.projects[projIdx].folders[folderIdx];
+  if(!folder||!folder.files||!folder.files.length){alert('No files in this folder.');return;}
+  // Download each file individually with a small delay between each
+  folder.files.forEach(function(f,i){
+    if(!f.data)return;
+    setTimeout(function(){
+      var a=document.createElement('a');
+      a.href=f.data;
+      a.download=f.name.split('/').pop()||f.name;
+      document.body.appendChild(a);a.click();document.body.removeChild(a);
+    },i*200);
+  });
+  toast('Downloading '+folder.files.length+' files...');
+};
+
+window.removeFile=function(type,idx,subtype,subIdx){
+  if(!confirm('Remove this attachment?'))return;
+  var d=flushDom();
+  if(type==='project'){
+    if(subtype==='folder'){if(d.projects[idx].folders)d.projects[idx].folders.splice(subIdx,1);}
+    else{d.projects[idx].img='';d.projects[idx].fileName='';d.projects[idx].files=[];}
+    saveData(d);renderProjects(d.projects);
+  } else if(type==='cert'){
+    d.certs[idx].img='';d.certs[idx].fileName='';saveData(d);renderCerts(d.certs);
+  }
+  applyEditMode();toast('Attachment removed.');
+};
+
+// ==================== APPLY EDIT MODE TO NEW ELEMENTS ====================
+function applyEditMode(){
+  if(!isOwner())return;
+  document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable','true'));
+}
+
+// ==================== INLINE LINK EDITING FOR PROJECTS ====================
+// When user clicks on project-link-el in edit mode, prompt for URL
+document.addEventListener('click',e=>{
+  if(!isOwner())return;
+  const el=e.target.closest('[data-field="link"]');
+  if(!el)return;
+  const type=el.dataset.type,idx=parseInt(el.dataset.idx);
+  const d=flushDom();
+  let cur='';
+  if(type==='project')cur=d.projects[idx]?.link||'';
+  else if(type==='cert')cur=d.certs[idx]?.link||'';
+  const val=prompt('Enter URL (leave empty to remove):',cur);
+  if(val===null)return;
+  if(type==='project'){d.projects[idx].link=val;saveData(d);renderProjects(d.projects);}
+  else if(type==='cert'){d.certs[idx].link=val;saveData(d);renderCerts(d.certs);}
+  else if(type==='contact'){d.contacts[idx].href=val;saveData(d);renderContacts(d.contacts);}
+  applyEditMode();
+});
+
+// ==================== CHANGE PASSWORD ====================
+// Accessible from console: changePassword()
+window.changePassword=function(){
+  document.getElementById('pass-modal').classList.add('show');
+};
+document.getElementById('pass-cancel').addEventListener('click',()=>document.getElementById('pass-modal').classList.remove('show'));
+document.getElementById('pass-submit').addEventListener('click',()=>{
+  const np=document.getElementById('new-pass').value;
+  const cp=document.getElementById('confirm-pass').value;
+  const err=document.getElementById('pass-err');
+  if(!np){err.style.display='block';err.textContent='Password cannot be empty.';return;}
+  if(np!==cp){err.style.display='block';err.textContent='Passwords do not match.';return;}
+  localStorage.setItem(PASS_KEY,np);
+  document.getElementById('pass-modal').classList.remove('show');
+  toast('Password updated successfully!');
+});
+
+// Add change password button to owner bar
+const cpBtn=document.createElement('button');
+cpBtn.className='ob-btn';cpBtn.textContent='Change Password';
+cpBtn.addEventListener('click',()=>document.getElementById('pass-modal').classList.add('show'));
+document.getElementById('owner-bar').querySelector('.owner-bar-btns').prepend(cpBtn);
+
+// ==================== TOAST ====================
+function toast(msg){
+  const t=document.createElement('div');
+  t.textContent=msg;
+  t.style.cssText='position:fixed;bottom:5rem;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--dark);padding:10px 24px;font-size:0.72rem;font-weight:800;letter-spacing:0.12em;text-transform:uppercase;z-index:9999;border-radius:2px;transition:opacity .5s;white-space:nowrap;';
+  document.body.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500);},2200);
+}
+
+// ==================== INIT ====================
+if(document.getElementById('baked-exported')){document.body.setAttribute('data-exported','1');}
+// Apply baked photo if present (works in any browser — no localStorage needed)
+(function(){
+  try{
+    var pt=document.getElementById('baked-photo');
+    if(pt&&pt.textContent.trim()){
+      var ph=JSON.parse(pt.textContent);
+      if(ph){
+        // Apply to photo-wrapper img
+        var pw=document.getElementById('photo-wrapper');
+        if(pw){var img=pw.querySelector('img');if(img){img.src=ph;}else{var ni=document.createElement('img');ni.src=ph;ni.style.cssText='width:100%;height:100%;object-fit:cover;';pw.prepend(ni);}}
+        // Save to localStorage for live session
+        try{localStorage.setItem('sb_photo3',ph);}catch(e){}
+      }
+    }
+  }catch(e){}
+})();
+renderAll(getData());
+if(isOwner()&&!document.body.getAttribute('data-exported'))enterOwnerMode();
+</script>
+</body>
+</html>
